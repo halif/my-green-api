@@ -1,48 +1,240 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GREEN-API | DevOps Test</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet" />
-    <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GREEN-API | DevOps Test</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet" />
+  <style>
+	*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        :root {
-          --bg:        #0d1117;
-          --surface:   #161b22;
-          --border:    #30363d;
-          --green:     #25d366;
-          --green-dim: #1a9147;
-          --text:      #e6edf3;
-          --muted:     #8b949e;
-          --input-bg:  #0d1117;
-          --radius:    8px;
-          --font-mono: 'JetBrains Mono', monospace;
-          --font-ui:   'Syne', sans-serif;
-        }
+    :root {
+      --bg:        #0d1117;
+      --surface:   #161b22;
+      --border:    #30363d;
+      --green:     #25d366;
+      --green-dim: #1a9147;
+      --text:      #e6edf3;
+      --muted:     #8b949e;
+      --input-bg:  #0d1117;
+      --radius:    8px;
+      --font-mono: 'JetBrains Mono', monospace;
+      --font-ui:   'Syne', sans-serif;
+    }
 
-        body {
-          background: var(--bg);
-          color: var(--text);
-          font-family: var(--font-mono);
-          min-height: 100vh;
-          display: flex;
-          flex-direction: column;
-        }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-mono);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
 
-        /* ── Top bar ── */
-        header {
-          border-bottom: 1px solid var(--border);
-          padding: 0 28px;
-          height: 52px;
-          display: flex;
-          align-items: center;
-          gap: 14px;
-          background: var(--surface);
-        }
+    /* ── Top bar ── */
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 0 28px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--surface);
+    }
+    .logo {
+      font-family: var(--font-ui);
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: -0.5px;
+      color: var(--green);
+    }
+    .logo span { color: var(--text); }
+    .tag {
+      font-size: 10px;
+      background: var(--green-dim);
+      color: #fff;
+      padding: 2px 7px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
 
-    </style>
+    /* ── Layout ── */
+    main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 0;
+      max-width: 1200px;
+      width: 100%;
+      margin: 40px auto;
+      padding: 0 24px;
+      align-items: start;
+    }
+
+    /* ── Left panel ── */
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .section-title {
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .field-group { display: flex; flex-direction: column; gap: 8px; }
+
+    input[type="text"], textarea {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      padding: 10px 14px;
+      outline: none;
+      transition: border-color .2s;
+      resize: vertical;
+    }
+    input[type="text"]:focus, textarea:focus {
+      border-color: var(--green);
+    }
+    input::placeholder, textarea::placeholder { color: var(--muted); }
+
+    /* ── Buttons ── */
+    .btn {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: transparent;
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      cursor: pointer;
+      transition: background .18s, border-color .18s, color .18s, transform .1s;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--green);
+      opacity: 0;
+      transition: opacity .18s;
+    }
+    .btn:hover { border-color: var(--green); color: var(--green); transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+    .btn.loading { pointer-events: none; opacity: .6; }
+    .btn.loading::before {
+      content: '';
+      display: inline-block;
+      width: 10px; height: 10px;
+      border: 2px solid var(--muted);
+      border-top-color: var(--green);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── Right panel (response) ── */
+    .response-panel {
+      margin-left: 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      display: flex;
+      flex-direction: column;
+      min-height: 520px;
+      overflow: hidden;
+    }
+    .response-header {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .response-title {
+      font-family: var(--font-ui);
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--text);
+    }
+    .status-badge {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 20px;
+      background: var(--border);
+      color: var(--muted);
+      transition: background .3s, color .3s;
+    }
+    .status-badge.ok   { background: rgba(37,211,102,.15); color: var(--green); }
+    .status-badge.err  { background: rgba(248,81,73,.15);  color: #f85149; }
+    .status-badge.wait { background: rgba(139,148,158,.1); color: var(--muted); }
+
+    #responseBox {
+      flex: 1;
+      background: var(--input-bg);
+      color: #79c0ff;
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      line-height: 1.7;
+      padding: 20px;
+      border: none;
+      outline: none;
+      resize: none;
+      white-space: pre;
+      overflow: auto;
+      min-height: 460px;
+    }
+
+    /* ── Animated green line indicator ── */
+    .indicator {
+      height: 3px;
+      background: linear-gradient(90deg, var(--green), var(--green-dim));
+      width: 0%;
+      transition: width .4s ease;
+    }
+    .indicator.active { width: 100%; }
+    .indicator.done   { width: 100%; background: var(--green); }
+    .indicator.error  { width: 100%; background: #f85149; }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 18px;
+      font-size: 11px;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+    footer strong { color: var(--green); }
+
+    @media (max-width: 760px) {
+      main { grid-template-columns: 1fr; }
+      .response-panel { margin-left: 0; margin-top: 20px; }
+    }
+  </style>
 </head>
 <body>
