@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GREEN-API | DevOps Test</title>
+  <title>GREEN-API | TEST task</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet" />
   <style>
@@ -307,5 +307,104 @@
 </main>
 
 <footer>
-  <strong>GREEN-API</strong> &copy; 2025 &nbsp;·&nbsp; Test Assignment
+  <strong>GREEN-API</strong> &copy; 2026 &nbsp;·&nbsp; Test Assignment
 </footer>
+
+<script>
+  const BASE = 'https://api.green-api.com';
+
+  function creds() {
+    const id    = document.getElementById('idInstance').value.trim();
+    const token = document.getElementById('apiTokenInstance').value.trim();
+    if (!id || !token) { showError('Введите idInstance и ApiTokenInstance'); return null; }
+    return { id, token };
+  }
+
+  function showResult(data) {
+    document.getElementById('responseBox').value = JSON.stringify(data, null, 2);
+    setStatus('ok', '200 OK');
+    setIndicator('done');
+  }
+
+  function showError(msg) {
+    document.getElementById('responseBox').value = '// Ошибка:\n' + msg;
+    setStatus('err', 'Ошибка');
+    setIndicator('error');
+  }
+
+  function setStatus(cls, text) {
+    const el = document.getElementById('statusBadge');
+    el.className = 'status-badge ' + cls;
+    el.textContent = text;
+  }
+
+  function setIndicator(state) {
+    const el = document.getElementById('indicator');
+    el.className = 'indicator ' + state;
+  }
+
+  function setLoading(btn) {
+    btn.classList.add('loading');
+    btn.dataset.orig = btn.textContent;
+    btn.textContent = btn.dataset.orig;
+    setIndicator('active');
+    setStatus('wait', '⏳ запрос...');
+  }
+
+  function clearLoading(btn) {
+    btn.classList.remove('loading');
+    btn.textContent = btn.dataset.orig;
+  }
+
+  async function call(method) {
+    const btn = document.querySelector(`[onclick="call('${method}')"]`);
+    const c = creds();
+    if (!c) return;
+
+    setLoading(btn);
+
+    try {
+      let res;
+
+      if (method === 'getSettings' || method === 'getStateInstance') {
+        res = await fetch(`${BASE}/waInstance${c.id}/${method}/${c.token}`);
+
+      } else if (method === 'sendMessage') {
+        const phone = document.getElementById('msgPhone').value.trim();
+        const text  = document.getElementById('msgText').value.trim();
+        if (!phone || !text) { showError('Введите номер телефона и текст сообщения'); clearLoading(btn); return; }
+        res = await fetch(`${BASE}/waInstance${c.id}/sendMessage/${c.token}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chatId: phone + '@c.us', message: text })
+        });
+
+      } else if (method === 'sendFileByUrl') {
+        const phone = document.getElementById('filePhone').value.trim();
+        const url   = document.getElementById('fileUrl').value.trim();
+        const name  = document.getElementById('fileName').value.trim() || 'file';
+        if (!phone || !url) { showError('Введите номер телефона и URL файла'); clearLoading(btn); return; }
+        res = await fetch(`${BASE}/waInstance${c.id}/sendFileByUrl/${c.token}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chatId: phone + '@c.us', urlFile: url, fileName: name })
+        });
+      }
+
+      if (!res.ok) {
+        const err = await res.text();
+        showError(`HTTP ${res.status}: ${err}`);
+      } else {
+        const data = await res.json();
+        showResult(data);
+      }
+
+    } catch (e) {
+      showError(e.message || 'Неизвестная ошибка сети');
+    } finally {
+      clearLoading(btn);
+    }
+  }
+</script>
+</body>
+</html>
