@@ -238,3 +238,74 @@
   </style>
 </head>
 <body>
+
+<header>
+  <div class="logo">GREEN<span>-API</span></div>
+  <span class="tag">DevOps Test</span>
+</header>
+
+<main>
+  <!-- ── LEFT ── -->
+  <div class="panel">
+
+    <!-- Credentials -->
+    <div>
+      <p class="section-title">Подключение к инстансу</p>
+      <div class="field-group">
+        <input type="text" id="idInstance"       placeholder="idInstance" />
+        <input type="text" id="apiTokenInstance" placeholder="ApiTokenInstance" />
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- Instance methods -->
+    <div>
+      <p class="section-title">Методы инстанса</p>
+      <div class="field-group">
+        <button class="btn" onclick="call('getSettings')">getSettings</button>
+        <button class="btn" onclick="call('getStateInstance')">getStateInstance</button>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- sendMessage -->
+    <div>
+      <p class="section-title">Отправить сообщение</p>
+      <div class="field-group">
+        <input type="text" id="msgPhone" placeholder="7777234567 (chatId)" />
+        <textarea id="msgText" rows="3" placeholder="Hello World!"></textarea>
+        <button class="btn" onclick="call('sendMessage')">sendMessage</button>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- sendFileByUrl -->
+    <div>
+      <p class="section-title">Отправить файл по URL</p>
+      <div class="field-group">
+        <input type="text" id="filePhone" placeholder="7777234567 (chatId)" />
+        <input type="text" id="fileUrl"   placeholder="https://my.site.com/img/horse.png" />
+        <input type="text" id="fileName"  placeholder="Имя файла (horse.png)" />
+        <button class="btn" onclick="call('sendFileByUrl')">sendFileByUrl</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── RIGHT ── -->
+  <div class="response-panel">
+    <div class="indicator" id="indicator"></div>
+    <div class="response-header">
+      <span class="response-title">Ответ</span>
+      <span class="status-badge wait" id="statusBadge">— ожидание —</span>
+    </div>
+    <textarea id="responseBox" readonly placeholder="Здесь появится ответ API..."></textarea>
+  </div>
+</main>
+
+<footer>
+  <strong>GREEN-API</strong> &copy; 2025 &nbsp;·&nbsp; Test Assignment
+</footer>
